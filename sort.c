@@ -6,7 +6,7 @@
 /*   By: yohatana <yohatana@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/31 21:20:20 by yohatana          #+#    #+#             */
-/*   Updated: 2024/11/06 14:56:14 by yohatana         ###   ########.fr       */
+/*   Updated: 2024/11/25 21:53:38 by yohatana         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,40 +24,98 @@ static int	get_max_bits(t_stack *stack)
 	return (max_bits);
 }
 
-void	radix_sort(t_stack *stack_a, t_stack *stack_b)
+// t_stack	*compress(t_stack *stack_a, int *stack_comp)
+t_stack	*compress(t_stack *stack_a)
 {
-	int	max_bits;
-	int	bit_pos;
-	int	index;
+	int	*stack_comp;
+	int	i;
+	int	j;
 
-	max_bits = get_max_bits(stack_a);
-	printf("max_bits %d nbr %d\n", max_bits , get_max(stack_a));
-	bit_pos = 0;
-	index = 0;
-	printf("stack_a->len: %zu\n", stack_a->len);
-
-	while (bit_pos++ < max_bits)
+	i = 0;
+	stack_comp = (int *)malloc(sizeof(int) * stack_a->len);
+	if (!stack_comp)
+		return (NULL);
+	stack_comp = bubble_sort(stack_a, stack_comp);
+	while (i < stack_a->len)
 	{
-		// このワイルはちゃんと動いてる
-		printf("bit_pos: %d max_bits: %d\n", bit_pos, max_bits);
-		for (int i =0; i < stack_a->len; i++)
+		j = 0;
+		while (j < stack_a->len)
 		{
-			printf("i: %d stack_a->stack[i]: %d\n", i, stack_a->stack[i]);
-		}
-		index = 0;
-		// while (index++ < stack_a->len - 1)
-		while (index < stack_a->len)
-		{
-			printf ("index :%d\n", index);
-			// ビットシフトして1になるかどうか
-			if (((stack_a->stack[index] >> index) & 1) == 1)
-				ra(stack_a);
+			if (stack_comp[j] == stack_a->stack[i])
+				break ;
 			else
-				pb(stack_a, stack_b);
-			index++;
+				j++;
 		}
-		printf("stack_b->len: %zu\n", stack_b->len);
-		while (stack_b->len > 0)
-			pa(stack_a, stack_b);
+		stack_a->stack[i] = j;
+		i++;
+	}
+	free (stack_comp);
+	return (stack_a);
+}
+
+int	*bubble_sort(t_stack *a, int *stack_comp)
+{
+	int	i;
+	int	j;
+	int	temp;
+
+	i = 0;
+	j = a->len - 1;
+	stack_copy(a, stack_comp);
+	while (i < a->len)
+	{
+		while (j > i)
+		{
+			if (stack_comp[j - 1] > stack_comp[j])
+			{
+				temp = stack_comp[j];
+				stack_comp[j] = stack_comp[j - 1];
+				stack_comp[j - 1] = temp;
+			}
+			j--;
+		}
+		j = a->len - 1;
+		i++;
+	}
+	return (stack_comp);
+}
+
+void	stack_copy(t_stack *a, int *stack_comp)
+{
+	int	i;
+
+	i = 0;
+	while (i < a->len)
+	{
+		stack_comp[i] = a->stack[i];
+		i++;
+	}
+}
+
+void	radix_sort(t_stack *a, t_stack *b)
+{
+	int		max_bits;
+	int		i;
+	int		j;
+	long	num;
+	size_t	len;
+
+	max_bits = get_max_bits(a);
+	i = 0;
+	while (i < max_bits && sort_check(a) == 1)
+	{
+		j = 0;
+		len = a->len;
+		while (j++ < len)
+		{
+			num = a->stack[0];
+			if (num & (1 << i))
+				ra(a);
+			else
+				pb(a, b);
+		}
+		while (b->len)
+			pa(a, b);
+		i++;
 	}
 }

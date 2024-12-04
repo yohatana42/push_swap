@@ -6,7 +6,7 @@
 /*   By: yohatana <yohatana@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/24 20:19:43 by yohatana          #+#    #+#             */
-/*   Updated: 2024/10/30 17:56:22 by yohatana         ###   ########.fr       */
+/*   Updated: 2024/12/04 16:29:35 by yohatana         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ static int	check_overflow(unsigned long result, unsigned int d, int minus_flg);
 static int	skip_space(char c);
 static int	return_over(int minus_flg);
 
-int	ft_atoi_ps(const char *str)
+long	ft_atoi_ps(const char *str)
 {
 	unsigned long	result;
 	int				minus_flg;
@@ -34,12 +34,13 @@ int	ft_atoi_ps(const char *str)
 	while (*str != '\0')
 	{
 		if (ft_isdigit(*str) == 0)
-			return (error());
+			return (LONG_MAX);
 		if (check_overflow(result, *str - '0', minus_flg) == 1)
-			return (error());
+			return (LONG_MAX);
 		result = (result * 10) + (*str - '0');
 		str++;
 	}
+
 	return ((long)result * minus_flg);
 }
 
@@ -68,11 +69,15 @@ static int	check_overflow(unsigned long result, unsigned int d, int minus_flg)
 
 	if (minus_flg == -1)
 	{
+		// end_dig = (INT_MIN % 10) * -1;
+		// max = (INT_MIN / 10) * -1;
 		end_dig = (LONG_MIN % 10) * -1;
 		max = (LONG_MIN / 10) * -1;
 	}
 	else
 	{
+		// end_dig = INT_MAX % 10;
+		// max = INT_MAX / 10;
 		end_dig = LONG_MAX % 10;
 		max = LONG_MAX / 10;
 	}

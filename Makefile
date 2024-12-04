@@ -6,7 +6,7 @@
 #    By: yohatana <yohatana@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/10/19 15:16:27 by yohatana          #+#    #+#              #
-#    Updated: 2024/10/31 21:49:48 by yohatana         ###   ########.fr        #
+#    Updated: 2024/11/25 21:32:52 by yohatana         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -24,7 +24,9 @@ SRCS		=\
 				stack_move_b.c\
 				sort.c\
 				get_num.c\
-				stack_move_both.c
+				stack_move_both.c\
+				error.c\
+				push_swap_helper.c
 
 # object file name
 OBJS		= $(SRCS:.c=.o)

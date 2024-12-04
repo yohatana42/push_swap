@@ -6,24 +6,34 @@
 /*   By: yohatana <yohatana@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/29 18:38:29 by yohatana          #+#    #+#             */
-/*   Updated: 2024/11/03 21:48:37 by yohatana         ###   ########.fr       */
+/*   Updated: 2024/12/04 16:29:31 by yohatana         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "push_swap.h"
 
-t_stack	*create_stack_a(int argc, char **argv, t_stack *stack_a)
+// t_stack	*create_stack_a(int argc, char **argv, t_stack *stack_a)
+t_stack	*create_stack_a(int argc, char **argv, t_stack *stack_a , t_stack *stack_b)
 {
 	int	i;
 	int	*stack;
+	long	temp;
 
+	temp = 0;
 	i = 1;
 	stack = (int *)ft_calloc(sizeof(int), DEFAULT_LIMIT);
 	if (!stack)
-		error_stack(stack_a);
+		error_doble_stack(stack_a, stack_b);
 	while (i < argc)
 	{
-		stack[i - 1] = ft_atoi_ps(argv[i]);
+		temp = ft_atoi_ps(argv[i]);
+		if (temp > INT_MAX || INT_MIN > temp)
+		{
+			free(stack);
+			error_doble_stack(stack_a, stack_b);
+		}
+		stack[i - 1] = (int)temp;
+		// stack[i - 1] = ft_atoi_ps(argv[i]);
 		i++;
 	}
 	stack_a->stack = stack;
@@ -35,7 +45,6 @@ t_stack	*create_stack_a(int argc, char **argv, t_stack *stack_a)
 
 int	same_nbr_check(t_stack *stack_a)
 {
-	// printf("----same_nbr_check\n");
 	int		nbr_1;
 	int		nbr_2;
 	size_t	i;
@@ -58,12 +67,12 @@ int	same_nbr_check(t_stack *stack_a)
 	return (0);
 }
 
+// return 1 is untill sort
 int	sort_check(t_stack *stack)
 {
-	// printf("----sort_check()\n");
-	int		min;
-	int		max;
-	int		i;
+	int	min;
+	int	max;
+	int	i;
 
 	i = 0;
 	if (stack->len == 1)
